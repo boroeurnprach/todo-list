@@ -70,7 +70,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   border: InputBorder.none,
                   hintText: 'Search',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
+                  hintStyle: TextStyle(
+                    color: Colors.grey.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),
@@ -88,52 +90,68 @@ class HomeScreen extends StatelessWidget {
                         ),
                         onDismissed: (_) {
                           controller.todos.removeAt(index);
+
                           Get.snackbar(
                               'Removed', " Task was succesfully deleted!",
                               snackPosition: SnackPosition.TOP);
                         },
-                        child: ListTile(
-                          title: Text(
-                            controller.todos[index].text!,
-                            style: controller.todos[index].done
-                                ? const TextStyle(
-                                    color: Colors.red,
-                                    decoration: TextDecoration.lineThrough,
-                                  )
-                                : const TextStyle(
-                                    color: Colors.black,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurple.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Colors.deepPurple.withOpacity(0.5),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                controller.todos[index].text!,
+                                style: controller.todos[index].done
+                                    ? const TextStyle(
+                                        color: Colors.red,
+                                        decoration: TextDecoration.lineThrough,
+                                      )
+                                    : const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                              ),
+                              trailing: Wrap(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.todos.removeAt(index);
+                                      Get.snackbar("Removed!",
+                                          "Task was succesfully deleted!",
+                                          snackPosition: SnackPosition.TOP);
+
+                                      controller.update();
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete_forever_rounded,
+                                      color: Colors.red,
+                                    ),
                                   ),
-                          ),
-                          trailing: Wrap(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  controller.todos.removeAt(index);
-                                  Get.snackbar("Removed!",
-                                      "Task was succesfully deleted!",
-                                      snackPosition: SnackPosition.TOP);
+                                  IconButton(
+                                    onPressed: () =>
+                                        Get.to(() => TodoEdit(index: index)),
+                                    icon: const Icon(Icons.edit),
+                                  ),
+                                ],
+                              ),
+                              leading: Checkbox(
+                                value: controller.todos[index].done,
+                                onChanged: (neWvalue) {
+                                  var todo = controller.todos[index];
+                                  todo.done = neWvalue!;
+                                  controller.todos[index] = todo;
                                   controller.update();
                                 },
-                                icon: const Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: Colors.red,
-                                ),
                               ),
-                              IconButton(
-                                onPressed: () =>
-                                    Get.to(() => TodoEdit(index: index)),
-                                icon: const Icon(Icons.edit),
-                              ),
-                            ],
-                          ),
-                          leading: Checkbox(
-                            value: controller.todos[index].done,
-                            onChanged: (neWvalue) {
-                              var todo = controller.todos[index];
-                              todo.done = neWvalue!;
-                              controller.todos[index] = todo;
-                              controller.update();
-                            },
+                            ),
                           ),
                         ),
                       ),
@@ -156,31 +174,62 @@ class HomeScreen extends StatelessWidget {
                                   'Removed!', "Task was succesfully deleted!",
                                   snackPosition: SnackPosition.TOP);
                             },
-                            child: ListTile(
-                              title: Text(
-                                controller.results[index].text!,
-                                style: controller.results[index].done
-                                    ? const TextStyle(
-                                        color: Colors.red,
-                                        decoration: TextDecoration.lineThrough,
-                                      )
-                                    : const TextStyle(
-                                        color: Colors.black,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.deepPurple.withOpacity(0.1),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.deepPurple.withOpacity(0.5),
+                                    ),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: ListTile(
+                                  title: Text(
+                                    controller.results[index].text!,
+                                    style: controller.results[index].done
+                                        ? const TextStyle(
+                                            color: Colors.red,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          )
+                                        : const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                  ),
+                                  trailing: Wrap(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          controller.todos.removeAt(index);
+                                          Get.snackbar("Removed!",
+                                              "Task was succesfully deleted!",
+                                              snackPosition: SnackPosition.TOP);
+                                          controller.update();
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete_forever_rounded,
+                                          color: Colors.red,
+                                        ),
                                       ),
-                              ),
-                              trailing: IconButton(
-                                onPressed: () =>
-                                    Get.to(() => TodoEdit(index: index)),
-                                icon: const Icon(Icons.edit),
-                              ),
-                              leading: Checkbox(
-                                value: controller.results[index].done,
-                                onChanged: (neWvalue) {
-                                  var todo = controller.results[index];
-                                  todo.done = neWvalue!;
-                                  controller.results[index] = todo;
-                                  controller.update();
-                                },
+                                      IconButton(
+                                        onPressed: () => Get.to(
+                                            () => TodoEdit(index: index)),
+                                        icon: const Icon(Icons.edit),
+                                      ),
+                                    ],
+                                  ),
+                                  leading: Checkbox(
+                                    value: controller.results[index].done,
+                                    onChanged: (neWvalue) {
+                                      var todo = controller.results[index];
+                                      todo.done = neWvalue!;
+                                      controller.results[index] = todo;
+                                      controller.update();
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -199,7 +248,7 @@ class HomeScreen extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 15.0),
                               child: Text(
-                                'No Results Found!',
+                                'No result',
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                             ),
@@ -213,7 +262,7 @@ class HomeScreen extends StatelessWidget {
                                   onPressed: () {
                                     Get.toNamed(TodoScreen.id);
                                   },
-                                  child: const Text('Creaet New One'),
+                                  child: const Text('Create a new one'),
                                 ),
                               ),
                             ),

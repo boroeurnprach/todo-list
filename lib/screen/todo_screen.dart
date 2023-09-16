@@ -31,7 +31,7 @@ class TodoScreen extends StatelessWidget {
                     focusedBorder: InputBorder.none,
                   ),
                   style: const TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 14.0,
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLines: 10,
@@ -45,13 +45,44 @@ class TodoScreen extends StatelessWidget {
                   color: Colors.deepPurple,
                   child: const Text('Add'),
                   onPressed: () {
-                    controller.todos.add(
-                      Todo(
-                        text: textEditingController.text,
-                      ),
-                    );
-                    controller.update();
-                    Get.back();
+                    final newItemText =
+                        textEditingController.text.trim(); // Trim whitespace
+                    if (newItemText.isNotEmpty) {
+                      final exists = controller.todos.any(
+                        (todo) => todo.text == newItemText,
+                      );
+
+                      if (exists) {
+                        // Show a dialog indicating that the item already exists
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Item Already Exists'),
+                              content: const Text(
+                                  'The item already exists in the list.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        // Add the item to the list
+                        controller.todos.add(
+                          Todo(
+                            text: newItemText,
+                          ),
+                        );
+                        controller.update();
+                        Get.back();
+                      }
+                    }
                   },
                 ),
               )
