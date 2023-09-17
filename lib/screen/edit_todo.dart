@@ -68,7 +68,7 @@ class TodoEdit extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 25.0,
                     ),
-                    maxLines: 10,
+                    maxLines: 15,
                     autofocus: true,
                     controller: textEditingController,
                     // Handle the "Enter" key press here
