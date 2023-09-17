@@ -4,8 +4,47 @@ import 'package:get/get.dart';
 
 class TodoEdit extends StatelessWidget {
   final int? index;
-  TodoEdit({Key? key, @required this.index}) : super(key: key);
+  TodoEdit({Key? key, required this.index}) : super(key: key);
   final todoController = Get.put(TodoController());
+
+  void _updateTask(TodoController controller,
+      TextEditingController textEditingController, BuildContext context) {
+    final updatedText = textEditingController.text;
+    final existingIndex = controller.todos.indexWhere(
+      (todo) =>
+          todo.text == updatedText && controller.todos.indexOf(todo) != index,
+    );
+
+    if (existingIndex != -1) {
+      // Show a dialog indicating that the item already exists
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Item Already Exists'),
+            content: const Text(
+              'The item already exists in the list.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Update the item if it doesn't exist elsewhere in the list
+      var editing = controller.todos[index!];
+      editing.text = updatedText;
+      controller.todos[index!] = editing;
+      controller.update();
+      Get.back();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +61,6 @@ class TodoEdit extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
-                    // textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       hintText: "What do you want to accomplish?",
                       focusedBorder: InputBorder.none,
@@ -33,6 +71,10 @@ class TodoEdit extends StatelessWidget {
                     maxLines: 10,
                     autofocus: true,
                     controller: textEditingController,
+                    // Handle the "Enter" key press here
+                    onSubmitted: (_) {
+                      _updateTask(controller, textEditingController, context);
+                    },
                   ),
                 ),
                 Row(
@@ -47,41 +89,8 @@ class TodoEdit extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('Update'),
                       onPressed: () {
-                        final updatedText = textEditingController.text;
-                        final existingIndex = controller.todos.indexWhere(
-                          (todo) =>
-                              todo.text == updatedText &&
-                              controller.todos.indexOf(todo) != index,
-                        );
-
-                        if (existingIndex != -1) {
-                          // Show a dialog indicating that the item already exists
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Item Already Exists'),
-                                content: const Text(
-                                    'The item already exists in the list.'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('OK'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          // Update the item if it doesn't exist elsewhere in the list
-                          var editing = controller.todos[index!];
-                          editing.text = updatedText;
-                          controller.todos[index!] = editing;
-                          controller.update();
-                          Get.back();
-                        }
+                        // Handle the "Update" button press here
+                        _updateTask(controller, textEditingController, context);
                       },
                     ),
                   ],

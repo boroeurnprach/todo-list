@@ -11,6 +11,45 @@ class TodoScreen extends StatelessWidget {
 
   final TextEditingController textEditingController = TextEditingController();
 
+  void _addTodoItem(TodoController controller, String text) {
+    final newItemText = text.trim(); // Trim whitespace
+    if (newItemText.isNotEmpty) {
+      final exists = controller.todos.any(
+        (todo) => todo.text == newItemText,
+      );
+
+      if (exists) {
+        // Show a dialog indicating that the item already exists
+        showDialog(
+          context: Get.context!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Item Already Exists'),
+              content: const Text('The item already exists in the list.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Add the item to the list
+        controller.todos.add(
+          Todo(
+            text: newItemText,
+          ),
+        );
+        controller.update();
+        Get.back();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -37,6 +76,11 @@ class TodoScreen extends StatelessWidget {
                   maxLines: 10,
                   autofocus: true,
                   controller: textEditingController,
+                  // Handle the "Enter" key press here
+                  onSubmitted: (text) {
+                    _addTodoItem(controller, text);
+                    textEditingController.clear();
+                  },
                 ),
               ),
               SizedBox(
@@ -45,44 +89,7 @@ class TodoScreen extends StatelessWidget {
                   color: Colors.deepPurple,
                   child: const Text('Add'),
                   onPressed: () {
-                    final newItemText =
-                        textEditingController.text.trim(); // Trim whitespace
-                    if (newItemText.isNotEmpty) {
-                      final exists = controller.todos.any(
-                        (todo) => todo.text == newItemText,
-                      );
-
-                      if (exists) {
-                        // Show a dialog indicating that the item already exists
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Item Already Exists'),
-                              content: const Text(
-                                  'The item already exists in the list.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        // Add the item to the list
-                        controller.todos.add(
-                          Todo(
-                            text: newItemText,
-                          ),
-                        );
-                        controller.update();
-                        Get.back();
-                      }
-                    }
+                    _addTodoItem(controller, textEditingController.text);
                   },
                 ),
               )

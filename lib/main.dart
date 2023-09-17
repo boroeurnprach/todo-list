@@ -20,8 +20,14 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: HomeScreen.id,
         getPages: [
-          GetPage(name: TodoScreen.id, page: () => TodoScreen()),
-          GetPage(name: HomeScreen.id, page: () => const HomeScreen()),
+          GetPage(
+            name: TodoScreen.id,
+            page: () => TodoScreen(),
+          ),
+          GetPage(
+            name: HomeScreen.id,
+            page: () => const HomeScreen(),
+          ),
         ],
       ),
     );
