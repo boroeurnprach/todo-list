@@ -14,8 +14,28 @@ class TodoEdit extends StatelessWidget {
       (todo) =>
           todo.text == updatedText && controller.todos.indexOf(todo) != index,
     );
-
-    if (existingIndex != -1) {
+    if (updatedText.isEmpty) {
+      // Show a dialog indicating that the task is empty
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Task is Empty'),
+            content: const Text(
+              'Please enter a task to continue.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else if (existingIndex != -1) {
       // Show a dialog indicating that the item already exists
       showDialog(
         context: context,
@@ -90,6 +110,7 @@ class TodoEdit extends StatelessWidget {
                       child: const Text('Update'),
                       onPressed: () {
                         // Handle the "Update" button press here
+
                         _updateTask(controller, textEditingController, context);
                       },
                     ),

@@ -12,7 +12,25 @@ class TodoScreen extends StatelessWidget {
   final TextEditingController textEditingController = TextEditingController();
 
   void _addTodoItem(TodoController controller, String text) {
-    final newItemText = text.trim(); // Trim whitespace
+    final newItemText = text.trim();
+    if (newItemText.isEmpty) {
+      showDialog(
+          context: Get.context!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Require a task'),
+              content: const Text('Please enter a task to continue'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          }); // Trim whitespace
+    }
     if (newItemText.isNotEmpty) {
       final exists = controller.todos.any(
         (todo) => todo.text == newItemText,
