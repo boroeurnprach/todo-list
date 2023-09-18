@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       },
       builder: (controller) => Scaffold(
         appBar: AppBar(
-          title: const Text('Todo List'),
+          title: const Text('Todo List App'),
           centerTitle: true,
         ),
         floatingActionButton:
