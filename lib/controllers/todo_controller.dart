@@ -36,32 +36,4 @@ class TodoController extends GetxController {
   varClear() {
     searchEditingController.value.clear();
   }
-
-  // final todo = FirebaseDatabase.instance.reference();
-  // submitData() {
-  //   todo.child('items').add(items);
-  // }
-
-  // Future<void> initConnectivity() async {
-  //   late ConnectivityResult result;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     result = await connectivity.checkConnectivity();
-  //   } on PlatformException catch (e) {
-  //     debugPrint('Couldn\'t check connectivity status, $e');
-  //     return;
-  //   }
-
-  //   return updateConnectionStatus(result);
-  // }
-
-  // Future<void> updateConnectionStatus(ConnectivityResult result) async {
-  //   connectionStatus = result;
-  // }
-
-  // @override
-  // void dispose() {
-  //   connectivitySubscription.cancel();
-  //   super.dispose();
-  // }
 }
